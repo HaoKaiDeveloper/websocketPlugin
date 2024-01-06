@@ -1,16 +1,26 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div>
+    <p>連線狀態 :{{ isConnected ? "連線中" : "斷線" }}</p>
+    <p>socket Data :{{ socketData }}</p>
+    <button @click="closeWebsocket" v-if="isConnected">切斷連線</button>
+    <button @click="reconnect" v-else>重新連線</button>
+  </div>
 </template>
 
-<script>
-import HelloWorld from './components/HelloWorld.vue'
+<script setup>
+import { useMainStore } from "./store/index";
+import { storeToRefs } from "pinia";
+import { ref } from "vue";
 
-export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
+const mainStore = useMainStore();
+const { isConnected, socketData } = storeToRefs(mainStore);
+
+function closeWebsocket() {
+  mainStore.closeWebsocket();
+}
+
+function reconnect() {
+  mainStore.initializaWebsocket();
 }
 </script>
 
